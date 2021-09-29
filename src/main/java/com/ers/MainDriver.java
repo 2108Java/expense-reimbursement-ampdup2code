@@ -1,21 +1,29 @@
 package com.ers;
 
-import java.util.ArrayList;
-import java.util.List;
-import io.javalin.Javalin;
-import io.javalin.http.Context;
+import com.ers.dao.DaoImp;
+import com.ers.service.AuthenticationSer;
+
+import Menu.Menu;
 
 public class MainDriver {
 	
 	public static void main(String[] args) {
-		
-		
-        Javalin app = Javalin.create().start(9000);
-        
-       // app.get("/User", ctx -> ctx.json(getUser(ctx)));
-        
-	
-	
 
+		
+		DaoImp database = new DaoImp();
+		
+		AuthenticationSer service = new AuthenticationSer(database);
+		
+		//BankRegistrationService service1 =new BankRegistrationService(database);
+		
+		//TransactionProcessindServ service2 =new TransactionProcessindServ(database);
+		
+		//Menu mainMenu = new Menu(service,service1,service2);
+		
+		Menu mainMenu = new Menu(service);
+		
+		mainMenu.display();
+		
 	}
+
 }

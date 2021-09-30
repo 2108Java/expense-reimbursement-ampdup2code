@@ -2,6 +2,7 @@ package com.ers;
 
 import com.ers.dao.DaoImp;
 import com.ers.service.AuthenticationSer;
+import com.ers.service.RegistrationSer;
 
 import Menu.Menu;
 
@@ -13,6 +14,7 @@ public class MainDriver {
 		DaoImp database = new DaoImp();
 		
 		AuthenticationSer service = new AuthenticationSer(database);
+		RegistrationSer service1 = new RegistrationSer(database);
 		
 		//BankRegistrationService service1 =new BankRegistrationService(database);
 		
@@ -20,7 +22,7 @@ public class MainDriver {
 		
 		//Menu mainMenu = new Menu(service,service1,service2);
 		
-		Menu mainMenu = new Menu(service);
+		Menu mainMenu = new Menu(service,service1);
 		
 		mainMenu.display();
 		

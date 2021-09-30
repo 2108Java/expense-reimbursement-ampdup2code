@@ -25,6 +25,13 @@ public class AuthenticationSer {
 		
 		return database.userAutenticate(username,password);
 	}
+
+
+
+	public int findUserId(String username, String password) {
+		// TODO Auto-generated method stub
+		return database.findUserId(username,password);
+	}
 	
 	
 }

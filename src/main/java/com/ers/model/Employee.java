@@ -43,6 +43,11 @@ public class Employee {
 	}
 
 
+	public Employee() {
+		super();
+	}
+
+
 	public String getFname() {
 		return fname;
 	}
@@ -55,6 +60,8 @@ public class Employee {
 	public void setLname(String lname) {
 		this.lname = lname;
 	}
+
+
 	
 	
 

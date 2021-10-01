@@ -8,6 +8,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
 import com.ers.model.Employee;
+import com.ers.model.Reimbersment;
 import com.ers.model.User;
 
 
@@ -190,4 +191,104 @@ public class DaoImp {
 	}
 	
 
+	
+	public int findEmpid(int userid) {
+		int result = 0;	
+		 Employee newemp = new Employee();
+		try(Connection connection = DriverManager.getConnection(url, username, password)){
+		
+			
+			String sql = "select employee_id,fname,lname,user_id from employee where user_id=?";
+				
+			PreparedStatement ps = connection.prepareStatement(sql);
+			
+			ps.setInt(1, userid);
+
+			ResultSet rs = ps.executeQuery();
+			int i =0;
+			while(rs.next()) {
+						newemp = new Employee(rs.getInt("employee_id"),								
+								rs.getString("fname"),
+								rs.getString("lname"),
+								rs.getInt("user_id"));
+						i++;
+			
+						}
+	
+	    result = (int)newemp.getUser_id();
+		
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+			
+		return result;
+	}
+		
+	
+    public boolean addReimbersment(Reimbersment remb) {
+    	
+    	boolean success = false;
+    	
+    	try(Connection connection = DriverManager.getConnection(url,username,password)){
+			
+			//2. Write a SQL statement String
+			String sql = "insert into reimbursment (employee_id,remb_amount,type_id,description,approved_id) values (?,?,?,?,?)";
+			
+			PreparedStatement ps = connection.prepareStatement(sql);
+			
+			ps.setInt(1, remb.getEmpid());
+			ps.setDouble(2, remb.getRemamount());
+			ps.setInt(3, remb.getRembtypeid());
+			ps.setString(4, remb.getDescription());
+			ps.setInt(5, remb.getApprovedid());
+
+			ps.execute();
+			success = true;				 
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+    	return success;
+    }
+
+
+	public Collection<Reimbersment> displayReimbersment(int empid) {
+		
+		Collection <Reimbersment> rem = new ArrayList<>();
+		try(Connection connection = DriverManager.getConnection(url, username, password)){
+			
+			String sql = "select remb_id ,employee_id ,approved_id ,remb_amount,fm_id,time_stamp,description,type_id from reimbursment where employee_id = ?";
+			PreparedStatement ps = connection.prepareStatement(sql);
+			ps.setInt(1, empid);
+			ResultSet rs = ps.executeQuery();
+			
+			int i = 0;
+			while(rs.next()) {
+				
+				//users1.add(new User("Jules", 20));
+						rem.add(new Reimbersment(rs.getInt("remb_id"),
+								rs.getInt("employee_id"),
+								rs.getInt("approved_id"),
+								rs.getDouble("remb_amount"),
+								rs.getInt("fm_id"),
+								rs.getDate("time_stamp"),
+								rs.getString("description"),
+								rs.getInt("type_id")));
+						
+						
+				i++;
+				
+			}
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		
+		return rem;
+		
+	}
 }

@@ -6,15 +6,18 @@ import java.util.List;
 import java.util.Scanner;
 
 import com.ers.model.Employee;
+import com.ers.model.Reimbersment;
 import com.ers.model.User;
 import com.ers.service.AuthenticationSer;
 import com.ers.service.RegistrationSer;
+import com.ers.service.ReimbursementSer;
 
 
 public class Menu {
 	
 	AuthenticationSer sr;
 	RegistrationSer sr1;
+	ReimbursementSer sr2;
 	
 	public Menu(AuthenticationSer sr) {
 		this.sr = sr;
@@ -22,10 +25,10 @@ public class Menu {
 	}
 
 
-	public Menu(AuthenticationSer sr, RegistrationSer sr1) {
+	public Menu(AuthenticationSer sr, RegistrationSer sr1,ReimbursementSer sr2) {
 		this.sr = sr;
 		this.sr1 = sr1;
-		
+		this.sr2 = sr2;
 	}
 
 
@@ -108,41 +111,96 @@ public class Menu {
     
     private void addReimbursement(String username,String password) {
     	
-    	
-    	
     	int userid = sr.findUserId(username,password);
-    	System.out.println("@@@@@@@@@@@@"+userid);
-    	
-    	System.out.println(" Reimbursement Registration");
-		Scanner sc = new Scanner(System.in);
-		System.out.println("Reimbursement Description");
-		String desc = sc.nextLine();
-		System.out.println("Reimbursement Amount");
-		Double amount = sc.nextDouble();
-//		System.out.println("Email Address");
-//		String username = sc.nextLine();
-//		System.out.println("Password");
-//		String pass = sc.nextLine();
-//		System.out.println("user type: Empoloyee 1,Finance Mgr 2, HR user 3");
-//		int usertype = sc.nextInt();
-//
-//	    Employee newemp = new Employee(fname,lname);
-//	    User newuser =new User(username,pass,usertype);
-//	    
-//	    boolean res=sr1.employeeRegistor(newemp,newuser);
-//	//    boolean res1=sr1.userRegistor(newuser);
-//	    if (res) {
-//	    	System.out.println("Employee Sucessfuly Registered");
-//	    }else {
-//	    	System.out.println("Employee Not Registered");
-//	    }
-//    	
-//    	
-    	
-    	
+    	if (userid != 0) {
+    		System.out.println("!!!!!!!!!!!"+userid);
+    		int empid = sr1.findEmpid(userid);
+    			if (empid != 0) {
+	    			
+			    	System.out.println("--------------------- Reimbursement Registration-------------------------");
+					Scanner sc = new Scanner(System.in);
+					System.out.println("Reimbursement Description");
+					String desc = sc.nextLine();
+					System.out.println("Reimbursement Amount");
+					Double ramount = sc.nextDouble();
+					System.out.println("Reimburslodging :Lodging:1,Travel:2,Food:3 or Other:4");
+					int rebtype = sc.nextInt();
+					int approvedid=3;
+					Reimbersment rem =new Reimbersment(empid,ramount,desc,rebtype,approvedid);
+					boolean res=sr2.addReimbersment(rem);
+					if(res) {
+						System.out.println("Reimbursement Successfully Registered");
+					} else {
+						System.out.println("Reimbursement Not Registered");
+					}
+					System.out.println("Employee Not Register Reimbursement");		
+    		}
+    		System.out.println("User Not Found");
+    	}
+    		
     }
     
+    private void viewpastticket(String username,String password) {
+    	int userid = sr.findUserId(username,password);
+    	int empid = sr1.findEmpid(userid);
+    	
+    	
+    	Collection <Reimbersment> rem = new ArrayList<Reimbersment>();
+    	
+		rem = sr2.displayReimbersment(empid);
+		System.out.println("-------------------view Reimbersment  "+empid+"--------------------");
 
+		 for (Reimbersment rem1 : rem) {
+			 String typeid ="";
+			 if (rem1.getRembtypeid()==1)
+			 {
+				 typeid="LODGING"; 
+			 }else if (rem1.getRembtypeid()==1)
+			 {
+				 typeid="Travel";
+			 }else if (rem1.getRembtypeid()==1)
+			 {
+				 typeid="Food";
+			 }
+			 else {
+				 typeid="Other";
+			 }
+			 String Approveid ="";
+			 if (rem1.getApprovedid()==1)
+			 {
+				 Approveid="Approved"; 
+			 }else if (rem1.getApprovedid()==2)
+			 {
+				 Approveid="Rejected";
+			 }
+			 else  
+			 {
+				 Approveid="Pending";
+			 }
+			 
+			 
+			 
+			 
+			 
+			 
+			 System.out.println("\n");
+			 System.out.println("Reimbersment Id :"+ rem1.getRembid());
+			 System.out.println("Employee Id :"+rem1.getEmpid());
+			 System.out.println("approved_id :"+Approveid);
+			 System.out.println("Reimbersment Amount :"+rem1.getRemamount());
+			// System.out.println("Fm Id :"+rem1.getFmid());
+			 System.out.println("Date created :"+rem1.getCreatedtime());
+			 System.out.println("Description :"+rem1.getDescription());
+			 System.out.println("Type Id :"+ typeid);
+			 
+			 
+			 
+			 
+			 
+		 }
+		 System.out.println("----------------------------------------------------------");	
+    	
+    }
     public void display() {
 		
 		Scanner scanner = new Scanner(System.in);
@@ -188,27 +246,28 @@ public class Menu {
 			
 
 			if (res == 1) {
-				
-				employeeMenu();
 				boolean runningin = true;
-				String result = scanner.nextLine();
-				switch (result)
-				{
-				case "1":
-					addReimbursement(username,password);
-					System.out.println("will be implemented");
-				case "3":
-					//	running =false;
-					//	System.out.println("Thanks for using our application ");
-						runningin = false;
-						//running = false;
-						System.out.println("Thanks for using our application << user logged out  ");
-						System.out.println("\n");
-						break;
-				default:
-					System.out.println("last Menu");
-				}
-			   } 
+				 do {
+					employeeMenu();
+					String result = scanner.nextLine();
+					switch (result)
+						{
+						case "1":
+							addReimbursement(username,password);
+							break;
+						case "2":
+							viewpastticket(username,password);
+							System.out.println("to be implemented");
+						case "3":
+							runningin = false;
+							System.out.println("Thanks for using our application << user logged out  ");
+							System.out.println("\n");
+							break;
+						default:
+							System.out.println("Wrong menu selection");
+						}
+				 } while (runningin);
+			}
 			else if (res == 2) {
 				
 				boolean runningin = true;

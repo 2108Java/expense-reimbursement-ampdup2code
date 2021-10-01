@@ -22,6 +22,10 @@ public class RegistrationSer {
 			// TODO Auto-generated method stub
 			return database.displayEmployee();
 		}
+		public int findEmpid(int userid) {
+			
+			return database.findEmpid(userid);
+		}
 		
 	
 	

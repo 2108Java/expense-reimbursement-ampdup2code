@@ -16,7 +16,7 @@ public class RegistrationSer {
 		}
 		public boolean employeeRegistor(Employee newemp,User newuser) {
 		// TODO Auto-generated method stub
-		return database.registercustomer(newemp,newuser);
+		return database.registeremployee(newemp,newuser);
 	}
 		public Collection <Employee> displayEmployee() {
 			// TODO Auto-generated method stub

@@ -47,9 +47,10 @@ public class Menu {
 		  System.out.println("\n");
 		  System.out.println("Finance Manager Main Menu");
 		  System.out.println("\n");
-		  System.out.println("1) view all the reimbursements");
-		  System.out.println("2) filter the requests by the status of the tickets ");
-		  System.out.println("3) Exit");
+		  System.out.println("1) View all the reimbursements");
+		  System.out.println("2) Filter the requests by the status of the tickets ");
+		  System.out.println("3) Approve or reject reimbursement");
+		  System.out.println("4) Exit");
 		 
 	}
 	private void hrMenu() {
@@ -82,7 +83,12 @@ public class Menu {
 		    User newuser =new User(username,pass,usertype);
 		    
 		    boolean res=sr1.employeeRegistor(newemp,newuser);
-		//    boolean res1=sr1.userRegistor(newuser);
+		    
+		    
+		    
+		    
+		    
+		
 		    if (res) {
 		    	System.out.println("Employee Sucessfuly Registered");
 		    }else {
@@ -113,7 +119,6 @@ public class Menu {
     	
     	int userid = sr.findUserId(username,password);
     	if (userid != 0) {
-    		System.out.println("!!!!!!!!!!!"+userid);
     		int empid = sr1.findEmpid(userid);
     			if (empid != 0) {
 	    			
@@ -148,17 +153,17 @@ public class Menu {
     	Collection <Reimbersment> rem = new ArrayList<Reimbersment>();
     	
 		rem = sr2.displayReimbersment(empid);
-		System.out.println("-------------------view Reimbersment  "+empid+"--------------------");
+		System.out.println("-------------------Reimbersment Tickets "+empid+"--------------------");
 
 		 for (Reimbersment rem1 : rem) {
 			 String typeid ="";
 			 if (rem1.getRembtypeid()==1)
 			 {
 				 typeid="LODGING"; 
-			 }else if (rem1.getRembtypeid()==1)
+			 }else if (rem1.getRembtypeid()==2)
 			 {
 				 typeid="Travel";
-			 }else if (rem1.getRembtypeid()==1)
+			 }else if (rem1.getRembtypeid()==3)
 			 {
 				 typeid="Food";
 			 }
@@ -186,9 +191,8 @@ public class Menu {
 			 System.out.println("\n");
 			 System.out.println("Reimbersment Id :"+ rem1.getRembid());
 			 System.out.println("Employee Id :"+rem1.getEmpid());
-			 System.out.println("approved_id :"+Approveid);
+			 System.out.println("Approved_id :"+Approveid);
 			 System.out.println("Reimbersment Amount :"+rem1.getRemamount());
-			// System.out.println("Fm Id :"+rem1.getFmid());
 			 System.out.println("Date created :"+rem1.getCreatedtime());
 			 System.out.println("Description :"+rem1.getDescription());
 			 System.out.println("Type Id :"+ typeid);
@@ -201,37 +205,144 @@ public class Menu {
 		 System.out.println("----------------------------------------------------------");	
     	
     }
+    
+    private void allReimbersment() {
+    	
+    	Collection <Reimbersment> rem = new ArrayList<Reimbersment>();
+    	
+		rem = sr2.allReimbersment();
+		System.out.println("-------------------All Reimbersment Tickets --------------------");
+
+		 for (Reimbersment rem1 : rem) {
+			 String typeid ="";
+			 if (rem1.getRembtypeid()==1)
+			 {
+				 typeid="LODGING"; 
+			 }else if (rem1.getRembtypeid()==2)
+			 {
+				 typeid="Travel";
+			 }else if (rem1.getRembtypeid()==3)
+			 {
+				 typeid="Food";
+			 }
+			 else {
+				 typeid="Other";
+			 }
+			 String Approveid ="";
+			 if (rem1.getApprovedid()==1)
+			 {
+				 Approveid="Approved"; 
+			 }else if (rem1.getApprovedid()==2)
+			 {
+				 Approveid="Rejected";
+			 }
+			 else  
+			 {
+				 Approveid="Pending";
+			 }
+			 	 
+			 System.out.println("\n");
+			 System.out.println("Reimbersment Id :"+ rem1.getRembid());
+			 System.out.println("Employee Id :"+rem1.getEmpid());
+			 System.out.println("Approved_id :"+Approveid);
+			 System.out.println("Reimbersment Amount :"+rem1.getRemamount());
+			 System.out.println("Date created :"+rem1.getCreatedtime());
+			 System.out.println("Description :"+rem1.getDescription());
+			 System.out.println("Type Id :"+ typeid);	 
+		 }
+		 System.out.println("----------------------------------------------------------");	
+    }
+    
+    
+    private void viewReimbursementsByStatus() {
+    	System.out.println(" Reimbursement By Status "+"\n");
+    	System.out.println(" Reimbursement Status-->Approved:1,Rejected:2 or Pending:3");
+		Scanner sc = new Scanner(System.in);
+		int approvedid = sc.nextInt();
+		
+		if (approvedid==1 || approvedid==2||approvedid==3)
+			{
+			Collection <Reimbersment> rem = new ArrayList<Reimbersment>();
+    	
+			rem = sr2.viewReimbursementsByStatus(approvedid);
+			System.out.println("-------------------All Reimbersment Tickets --------------------");
+
+			for (Reimbersment rem1 : rem) {
+				String typeid ="";
+				if (rem1.getRembtypeid()==1)
+				{
+				 typeid="LODGING"; 
+				}else if (rem1.getRembtypeid()==2)
+				{
+				 typeid="Travel";
+				}else if (rem1.getRembtypeid()==3)
+				{
+				 typeid="Food";
+				}
+				else {
+				 typeid="Other";
+				}
+				String Approveid ="";
+				if (rem1.getApprovedid()==1)
+				{
+				 Approveid="Approved"; 
+				}else if (rem1.getApprovedid()==2)
+				{
+				 Approveid="Rejected";
+				}
+				else  
+				{
+				 Approveid="Pending";
+				}
+			 	 
+			 System.out.println("\n");
+			 System.out.println("Reimbersment Id :"+ rem1.getRembid());
+			 System.out.println("Employee Id :"+rem1.getEmpid());
+			 System.out.println("Approved_id :"+Approveid);
+			 System.out.println("Reimbersment Amount :"+rem1.getRemamount());
+			 System.out.println("Date created :"+rem1.getCreatedtime());
+			 System.out.println("Description :"+rem1.getDescription());
+			 System.out.println("Type Id :"+ typeid);	 
+				}
+			System.out.println("----------------------------------------------------------");	
+			}
+    	else {
+    	System.out.println("Invalid  Reimbursement By Status ");
+     }
+    }
+    
+
+    public void ApproveorRejectReimbursements(String username,String password) {
+    	
+    	System.out.println("Reimbersment id");
+		Scanner sc = new Scanner(System.in);
+		int rid=sc.nextInt();
+		
+		System.out.println("Approve :1,Reject :2 or Pending :3");
+		int status=sc.nextInt();
+		
+		int userid = sr.findUserId(username,password);
+		int empid = sr1.findEmpid(userid);
+		boolean res = sr2.ApproveorRejectReimbursements(rid,status,empid);
+		if(res) {
+			System.out.println ("status Successfully changed");
+			
+		}else {
+			System.out.println ("status Not changed");
+		}
+		
+		
+    	
+    }
+    
+    
     public void display() {
 		
+	System.out.println("Welcome to Expense Reimbursement System"+"\n");
+
+
 		Scanner scanner = new Scanner(System.in);
 		boolean running = true;
-		System.out.println("Welcome to Expense Reimbursement System");
-		
-		System.out.println("Are you a new user (Y/N)?"+"\n");
-		String ch = scanner.nextLine();
-		if (ch.equals("Y") || ch.equals("y")) {
-			System.out.println("User Registration");
-			//System.out.println("First Name");
-			//String fname = scanner.nextLine();
-			//System.out.println("Last Name");
-			//String lname = scanner.nextLine();
-			//System.out.println("User Name");
-			String username = scanner.nextLine();
-			System.out.println("Password");
-			String password = scanner.nextLine();
-			User newUser = new User(username,password);
-     
-			if(sr.registerUser(newUser)) {
-				System.out.println("\n");
-				System.out.println("User Successfully added!");
-				System.out.println("\n");
-				
-			}else {
-				System.out.println("not added!");
-			}
-			
-		}
-		running = true;
 		do {
 			System.out.println("----------------Login Menu-------------- ");
 			System.out.println("Username");
@@ -257,7 +368,7 @@ public class Menu {
 							break;
 						case "2":
 							viewpastticket(username,password);
-							System.out.println("to be implemented");
+							break;
 						case "3":
 							runningin = false;
 							System.out.println("Thanks for using our application << user logged out  ");
@@ -279,12 +390,15 @@ public class Menu {
 						switch (result)
 						{
 						case "1":
-							registoranEmployee();
+							allReimbersment();
 							break;
 						case "2":
-						// viewEmployee();
+							viewReimbursementsByStatus();
 							break;
 						case "3":
+							ApproveorRejectReimbursements(username,password);
+							break;
+						case "4":
 							runningin = false;
 							System.out.println("Thanks for using our application << user logged out  ");
 							System.out.println("\n");

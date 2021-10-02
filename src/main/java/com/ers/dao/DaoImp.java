@@ -22,8 +22,6 @@ public class DaoImp {
 	
 	public int userAutenticate(String username1, String password1) {
 		
-		
-		//System.out.println(url);
 	
 		int result = 0;	
 			User  newuser = new User();
@@ -36,7 +34,6 @@ public class DaoImp {
 				
 				ps.setString(1, username1);
 				ps.setString(2, password1);	
-//				System.out.println(ps);
 				ResultSet rs = ps.executeQuery();
 				int i =0;
 				while(rs.next()) {
@@ -51,7 +48,6 @@ public class DaoImp {
 		result = (int)newuser.getUsertypeid();
 			
 			} catch (SQLException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 				
@@ -59,25 +55,24 @@ public class DaoImp {
 		}
 
 
-	public boolean registercustomer(Employee newemp,User newuser) {
+	public boolean registeremployee(Employee newemp,User newuser) {
 
 			boolean success1 = false;
 			boolean success2 = false;
 			boolean success3 = false;
-			//1. Connect to database!
 			try(Connection connection = DriverManager.getConnection(url,username,password)){
 				
-				//2. Write a SQL statement String
+		
 				String sql = "insert into users(username,password,usertype) VALUES (?,?,?)";
 				
 				PreparedStatement ps = connection.prepareStatement(sql);
-				//System.out.println(ps);
+				
 				ps.setString(1, newuser.getUsername());
 				ps.setString(2, newuser.getPassword());
 				ps.setInt(3, newuser.getUsertypeid());
 				
 				
-				//System.out.println(ps);
+				
 				ps.execute();
 				
 				success1 = true;
@@ -85,21 +80,23 @@ public class DaoImp {
 							 
 				
 			} catch (SQLException e) {
-				// TODO Auto-generated catch block
+				
 				e.printStackTrace();
 			}
+			
+			
 			try(Connection connection = DriverManager.getConnection(url,username,password)){
 				
-				//2. Write a SQL statement String
+				
 				String sql = "insert into employee (fname,lname,user_id) values(?,?,(select max(user_id) from users))";
-				//String sql = "insert into users(username,password,usertype) values VALUES (?,?,?)";
+				
 				
 				PreparedStatement ps = connection.prepareStatement(sql);
-				//System.out.println(ps);
+				
 				ps.setString(1, newemp.getFname());
 				ps.setString(2, newemp.getLname());
 				
-				//System.out.println(ps);
+	
 				ps.execute();
 				
 				success2 = true;
@@ -107,13 +104,47 @@ public class DaoImp {
 							 
 				
 			} catch (SQLException e) {
-				// TODO Auto-generated catch block
+				
 				e.printStackTrace();
 			}
 
 			if (success1 && success2) {
 				success3 =true;
 			}
+			int userid=newuser.getUsertypeid();
+			
+			if (userid==2)
+				{
+			
+				
+		
+				try(Connection connection = DriverManager.getConnection(url,username,password)){
+				
+				
+				String sql = "insert into finance_manager (fm_id,fname,lname,user_id) values((select max(employee_id) from employee),?,?,?)";
+				
+				
+				PreparedStatement ps = connection.prepareStatement(sql);
+		
+				ps.setString(1, newemp.getFname());
+				ps.setString(2, newemp.getLname());
+				ps.setInt(3, userid);
+				
+				
+				ps.execute();
+			
+		
+				 
+			} catch (SQLException e) {
+				
+				e.printStackTrace();
+			}
+			
+			}
+			if (success1 && success2) {
+				success3 =true;
+			}
+			
 			
 			return success3;
 		
@@ -168,7 +199,7 @@ public class DaoImp {
 			
 			ps.setString(1, username2);
 			ps.setString(2, password2);	
-//			System.out.println(ps);
+
 			ResultSet rs = ps.executeQuery();
 			int i =0;
 			while(rs.next()) {
@@ -183,7 +214,7 @@ public class DaoImp {
 	    result = (int)newuser.getId();
 		
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
+			
 			e.printStackTrace();
 		}
 			
@@ -218,7 +249,7 @@ public class DaoImp {
 	    result = (int)newemp.getUser_id();
 		
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
+			
 			e.printStackTrace();
 		}
 			
@@ -232,7 +263,6 @@ public class DaoImp {
     	
     	try(Connection connection = DriverManager.getConnection(url,username,password)){
 			
-			//2. Write a SQL statement String
 			String sql = "insert into reimbursment (employee_id,remb_amount,type_id,description,approved_id) values (?,?,?,?,?)";
 			
 			PreparedStatement ps = connection.prepareStatement(sql);
@@ -247,7 +277,7 @@ public class DaoImp {
 			success = true;				 
 			
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
+			
 			e.printStackTrace();
 		}
     	return success;
@@ -267,7 +297,7 @@ public class DaoImp {
 			int i = 0;
 			while(rs.next()) {
 				
-				//users1.add(new User("Jules", 20));
+		
 						rem.add(new Reimbersment(rs.getInt("remb_id"),
 								rs.getInt("employee_id"),
 								rs.getInt("approved_id"),
@@ -283,7 +313,7 @@ public class DaoImp {
 			}
 			
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
+			
 			e.printStackTrace();
 		}
 		
@@ -291,4 +321,99 @@ public class DaoImp {
 		return rem;
 		
 	}
-}
+
+
+	public Collection<Reimbersment> allReimbersment() {
+		Collection <Reimbersment> rem = new ArrayList<>();
+		try(Connection connection = DriverManager.getConnection(url, username, password)){
+			
+			String sql = "select remb_id ,employee_id ,approved_id ,remb_amount,fm_id,time_stamp,description,type_id from reimbursment";
+			PreparedStatement ps = connection.prepareStatement(sql);
+			ResultSet rs = ps.executeQuery();
+			
+			int i = 0;
+			while(rs.next()) {
+						rem.add(new Reimbersment(rs.getInt("remb_id"),
+								rs.getInt("employee_id"),
+								rs.getInt("approved_id"),
+								rs.getDouble("remb_amount"),
+								rs.getInt("fm_id"),
+								rs.getDate("time_stamp"),
+								rs.getString("description"),
+								rs.getInt("type_id")));
+							
+				i++;
+				
+			}
+			
+		} catch (SQLException e) {
+		
+			e.printStackTrace();
+		}
+		
+		
+		return rem;
+	}
+
+
+	public Collection<Reimbersment> viewReimbursementsByStatus(int approvedid) {
+		Collection <Reimbersment> rem = new ArrayList<>();
+		try(Connection connection = DriverManager.getConnection(url, username, password)){
+			
+			String sql = "select remb_id ,employee_id ,approved_id ,remb_amount,fm_id,time_stamp,description,type_id from reimbursment where approved_id=?";
+			PreparedStatement ps = connection.prepareStatement(sql);
+			ps.setInt(1, approvedid);
+			ResultSet rs = ps.executeQuery();
+			
+			int i = 0;
+			while(rs.next()) {
+						rem.add(new Reimbersment(rs.getInt("remb_id"),
+								rs.getInt("employee_id"),
+								rs.getInt("approved_id"),
+								rs.getDouble("remb_amount"),
+								rs.getInt("fm_id"),
+								rs.getDate("time_stamp"),
+								rs.getString("description"),
+								rs.getInt("type_id")));
+							
+				i++;
+				
+			}
+			
+		} catch (SQLException e) {
+	
+			e.printStackTrace();
+		}
+		
+		
+		return rem;
+	}
+
+
+	public boolean ApproveorRejectReimbursements(int rid, int status,int empid) {
+		
+		boolean success = false;
+		try(Connection connection = DriverManager.getConnection(url, username, password)){
+		
+			
+			String sql = "update reimbursment set approved_id = ?,fm_id = ? where remb_id = ? ";
+				
+			PreparedStatement ps = connection.prepareStatement(sql);
+			
+			ps.setInt(1, status);
+			ps.setInt(2, empid);
+			ps.setInt(3, rid);
+
+		    ps.execute();
+			success = true;
+		} catch (SQLException e) {
+			
+			e.printStackTrace();
+			
+		
+	      }
+		
+		return success;
+		}
+	
+	}

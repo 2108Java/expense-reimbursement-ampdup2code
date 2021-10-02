@@ -4,6 +4,9 @@ username varchar(30) not null unique,
 password varchar(30) not null
 );
 
+alter table user_table 
+rename column password to user_password;
+
 create table employee_table (
 employee_id serial primary key,
 f_name varchar(30) not null,
@@ -45,3 +48,11 @@ values ('Pending'), ('Approved'), ('Rejected');
 insert into reimbursement_type (category)
 values ('Lodging'), ('Travel'), ('Food'), ('Other');
 
+insert into user_table (username, user_password)
+values ('jacky', 'pass1'), ('luis', 'pass2'), ('yibeltal', 'pass3');
+
+insert into employee_table (f_name, l_name, user_id)
+values ('Jacky', 'Thomas', 1), ('Luis', 'Ramirez', 2);
+
+insert into finance_manager_table (f_name, l_name, user_id)
+values ('Yibeltal', 'Zerinhun', 3)

@@ -56,3 +56,20 @@ values ('Jacky', 'Thomas', 1), ('Luis', 'Ramirez', 2);
 
 insert into finance_manager_table (f_name, l_name, user_id)
 values ('Yibeltal', 'Zerinhun', 3)
+
+create table user_type (
+type_id serial primary key,
+user_type varchar(100)
+)
+
+alter table user_table 
+add column type_id int references user_type(type_id) on delete cascade;
+
+insert into user_type (user_type)
+values ('employee'), ('finance_manager');
+
+update user_table 
+set type_id = 1 where username = 'jacky' or username = 'luis'
+
+update user_table 
+set type_id = 2 where username = 'yibeltal'

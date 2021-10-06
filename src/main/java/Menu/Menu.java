@@ -138,9 +138,9 @@ public class Menu {
 					} else {
 						System.out.println("Reimbursement Not Registered");
 					}
-					System.out.println("Employee Not Register Reimbursement");		
+				//System.out.println("Employee Not Register Reimbursement");		
     		}
-    		System.out.println("User Not Found");
+    		//System.out.println("User Not Found");
     	}
     		
     }

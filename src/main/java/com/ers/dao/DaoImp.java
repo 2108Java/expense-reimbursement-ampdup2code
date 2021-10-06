@@ -1,7 +1,6 @@
 package com.ers.dao;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -10,25 +9,32 @@ import java.util.Collection;
 import com.ers.model.Employee;
 import com.ers.model.Reimbersment;
 import com.ers.model.User;
+import com.ers.util.ConnectionFactory;
+
 
 
 public class DaoImp {
 	
-	private String dbLocation = "localhost";
-	private String username = "postgres";
-	private String password = "Passw0rd$";
-	private String url = "jdbc:postgresql://" + dbLocation + "/ERS";
+//	private String dbLocation = "localhost";
+//	private String username = "postgres";
+//	private String password = "Passw0rd$";
+//	private String url = "jdbc:postgresql://" + dbLocation + "/ERS";
 	
+
+	ConnectionFactory connectionFactory = new ConnectionFactory();
 	
 	public int userAutenticate(String username1, String password1) {
 		
 	
 		int result = 0;	
 			User  newuser = new User();
-			try(Connection connection = DriverManager.getConnection(url, username, password)){
+			//try(Connection connection = DriverManager.getConnection(url, username, password)){
 			
-				
-				String sql = "SELECT * FROM users where username = ? and password = ?";
+			try {
+				Connection connection = connectionFactory.getConnection();
+		
+				//String sql = "SELECT * FROM users where username = ? and password = ?";
+				String sql = "SELECT * FROM user_table where username = ? and user_password = ?";
 					
 				PreparedStatement ps = connection.prepareStatement(sql);
 				
@@ -39,8 +45,8 @@ public class DaoImp {
 				while(rs.next()) {
 							newuser = new User(rs.getInt("user_id"),								
 									rs.getString("username"),
-									rs.getString("password"),
-									rs.getInt("usertype"));
+									rs.getString("user_password"),
+									rs.getInt("type_id"));
 							i++;
 				
 							}
@@ -60,10 +66,11 @@ public class DaoImp {
 			boolean success1 = false;
 			boolean success2 = false;
 			boolean success3 = false;
-			try(Connection connection = DriverManager.getConnection(url,username,password)){
-				
+			//try(Connection connection = DriverManager.getConnection(url,username,password)){
+			try {
+				Connection connection = connectionFactory.getConnection();
 		
-				String sql = "insert into users(username,password,usertype) VALUES (?,?,?)";
+				String sql = "insert into user_table(username,user_password,type_id) VALUES (?,?,?)";
 				
 				PreparedStatement ps = connection.prepareStatement(sql);
 				
@@ -85,12 +92,14 @@ public class DaoImp {
 			}
 			
 			
-			try(Connection connection = DriverManager.getConnection(url,username,password)){
+			//try(Connection connection = DriverManager.getConnection(url,username,password)){
 				
+			try {
+				Connection connection = connectionFactory.getConnection();
+		
+				//String sql = "insert into employee (fname,lname,user_id) values(?,?,(select max(user_id) from users))";
 				
-				String sql = "insert into employee (fname,lname,user_id) values(?,?,(select max(user_id) from users))";
-				
-				
+				String sql = "insert into employee_table (f_name,l_name,user_id) values(?,?,(select max(user_id) from user_table))";
 				PreparedStatement ps = connection.prepareStatement(sql);
 				
 				ps.setString(1, newemp.getFname());
@@ -118,12 +127,14 @@ public class DaoImp {
 			
 				
 		
-				try(Connection connection = DriverManager.getConnection(url,username,password)){
+				//try(Connection connection = DriverManager.getConnection(url,username,password)){
 				
+				try {
+					Connection connection = connectionFactory.getConnection();
+			
+				//String sql = "insert into finance_manager (fm_id,fname,lname,user_id) values((select max(employee_id) from employee),?,?,?)";
 				
-				String sql = "insert into finance_manager (fm_id,fname,lname,user_id) values((select max(employee_id) from employee),?,?,?)";
-				
-				
+				String sql = "insert into finance_manager_table (fm_id,f_name,l_name,user_id) values((select max(employee_id) from employee_table),?,?,?)";
 				PreparedStatement ps = connection.prepareStatement(sql);
 		
 				ps.setString(1, newemp.getFname());
@@ -157,10 +168,14 @@ public class DaoImp {
 			
 		//Transaction[] tran = new Transaction[30];
 		Collection <Employee> emp = new ArrayList<>();
-		try(Connection connection = DriverManager.getConnection(url, username, password)){
-			
+		//try(Connection connection = DriverManager.getConnection(url, username, password)){
+		try {
+			Connection connection = connectionFactory.getConnection();
+	
 			//String sql = "select trans_id,db_account,cr_account,amount,reference,date_created,transaction_type_id from b_transaction";
-			String sql = "select employee_id,fname,lname,user_id from employee";
+			//String sql = "select employee_id,fname,lname,user_id from employee";
+			
+			String sql = "select employee_id,f_name,l_name,user_id from employee_table";
 			PreparedStatement ps = connection.prepareStatement(sql);
 			
 			ResultSet rs = ps.executeQuery();
@@ -169,7 +184,7 @@ public class DaoImp {
 			while(rs.next()) {
 				
 				//users1.add(new User("Jules", 20));
-						emp.add(new Employee(rs.getInt("employee_id"),rs.getString("fname"),rs.getString("lname"),rs.getInt("user_id")));
+						emp.add(new Employee(rs.getInt("employee_id"),rs.getString("f_name"),rs.getString("l_name"),rs.getInt("user_id")));
 						
 						
 				i++;
@@ -190,10 +205,13 @@ public class DaoImp {
 	public int findUserId(String username2, String password2) {
 		int result = 0;	
 		User  newuser = new User();
-		try(Connection connection = DriverManager.getConnection(url, username, password)){
-		
+		//try(Connection connection = DriverManager.getConnection(url, username, password)){
+		try {
+			Connection connection = connectionFactory.getConnection();
+	
 			
-			String sql = "SELECT user_id,username,password,usertype FROM users where username = ? and password = ?";
+			//String sql = "SELECT user_id,username,password,usertype FROM users where username = ? and password = ?";
+			String sql = "SELECT user_id,username,user_password,type_id FROM user_table where username = ? and user_password = ?";
 				
 			PreparedStatement ps = connection.prepareStatement(sql);
 			
@@ -205,8 +223,8 @@ public class DaoImp {
 			while(rs.next()) {
 						newuser = new User(rs.getInt("user_id"),								
 								rs.getString("username"),
-								rs.getString("password"),
-								rs.getInt("usertype"));
+								rs.getString("user_password"),
+								rs.getInt("type_id"));
 						i++;
 			
 						}
@@ -226,11 +244,13 @@ public class DaoImp {
 	public int findEmpid(int userid) {
 		int result = 0;	
 		 Employee newemp = new Employee();
-		try(Connection connection = DriverManager.getConnection(url, username, password)){
+		//try(Connection connection = DriverManager.getConnection(url, username, password)){
+		 try {
+				Connection connection = connectionFactory.getConnection();
 		
 			
-			String sql = "select employee_id,fname,lname,user_id from employee where user_id=?";
-				
+			//String sql = "select employee_id,fname,lname,user_id from employee where user_id=?";
+			String sql = "select employee_id,f_name,l_name,user_id from employee_table where user_id=?";	
 			PreparedStatement ps = connection.prepareStatement(sql);
 			
 			ps.setInt(1, userid);
@@ -239,15 +259,14 @@ public class DaoImp {
 			int i =0;
 			while(rs.next()) {
 						newemp = new Employee(rs.getInt("employee_id"),								
-								rs.getString("fname"),
-								rs.getString("lname"),
+								rs.getString("f_name"),
+								rs.getString("l_name"),
 								rs.getInt("user_id"));
 						i++;
 			
 						}
 	
 	    result = (int)newemp.getUser_id();
-		
 		} catch (SQLException e) {
 			
 			e.printStackTrace();
@@ -261,9 +280,13 @@ public class DaoImp {
     	
     	boolean success = false;
     	
-    	try(Connection connection = DriverManager.getConnection(url,username,password)){
-			
-			String sql = "insert into reimbursment (employee_id,remb_amount,type_id,description,approved_id) values (?,?,?,?,?)";
+    	//try(Connection connection = DriverManager.getConnection(url,username,password)){
+    	try {
+			Connection connection = connectionFactory.getConnection();
+	
+			//String sql = "insert into reimbursment (employee_id,remb_amount,type_id,description,approved_id) values (?,?,?,?,?)";
+
+			String sql = "insert into reimbursement_table (employee_id,reimbursment_amount,type_id,description,approval_id) values (?,?,?,?,?)";
 			
 			PreparedStatement ps = connection.prepareStatement(sql);
 			
@@ -287,9 +310,12 @@ public class DaoImp {
 	public Collection<Reimbersment> displayReimbersment(int empid) {
 		
 		Collection <Reimbersment> rem = new ArrayList<>();
-		try(Connection connection = DriverManager.getConnection(url, username, password)){
-			
-			String sql = "select remb_id ,employee_id ,approved_id ,remb_amount,fm_id,time_stamp,description,type_id from reimbursment where employee_id = ?";
+		//try(Connection connection = DriverManager.getConnection(url, username, password)){
+		try {
+			Connection connection = connectionFactory.getConnection();
+	
+			//String sql = "select remb_id ,employee_id ,approved_id ,remb_amount,fm_id,time_stamp,description,type_id from reimbursment where employee_id = ?";
+			String sql = "select reimbursement_id ,employee_id ,approval_id ,reimbursment_amount,fm_id,time_submitted,description,type_id from reimbursement_table where employee_id = ?";
 			PreparedStatement ps = connection.prepareStatement(sql);
 			ps.setInt(1, empid);
 			ResultSet rs = ps.executeQuery();
@@ -298,12 +324,12 @@ public class DaoImp {
 			while(rs.next()) {
 				
 		
-						rem.add(new Reimbersment(rs.getInt("remb_id"),
+						rem.add(new Reimbersment(rs.getInt("reimbursement_id"),
 								rs.getInt("employee_id"),
-								rs.getInt("approved_id"),
-								rs.getDouble("remb_amount"),
+								rs.getInt("approval_id"),
+								rs.getDouble("reimbursment_amount"),
 								rs.getInt("fm_id"),
-								rs.getDate("time_stamp"),
+								rs.getDate("time_submitted"),
 								rs.getString("description"),
 								rs.getInt("type_id")));
 						
@@ -325,20 +351,23 @@ public class DaoImp {
 
 	public Collection<Reimbersment> allReimbersment() {
 		Collection <Reimbersment> rem = new ArrayList<>();
-		try(Connection connection = DriverManager.getConnection(url, username, password)){
-			
-			String sql = "select remb_id ,employee_id ,approved_id ,remb_amount,fm_id,time_stamp,description,type_id from reimbursment";
+		//try(Connection connection = DriverManager.getConnection(url, username, password)){
+		try {
+			Connection connection = connectionFactory.getConnection();
+	
+			//String sql = "select remb_id ,employee_id ,approved_id ,remb_amount,fm_id,time_stamp,description,type_id from reimbursment";
+			String sql = "select reimbursement_id ,employee_id ,approval_id ,reimbursment_amount,fm_id,time_submitted,description,type_id from reimbursement_table";
 			PreparedStatement ps = connection.prepareStatement(sql);
 			ResultSet rs = ps.executeQuery();
 			
 			int i = 0;
 			while(rs.next()) {
-						rem.add(new Reimbersment(rs.getInt("remb_id"),
+						rem.add(new Reimbersment(rs.getInt("reimbursement_id"),
 								rs.getInt("employee_id"),
-								rs.getInt("approved_id"),
-								rs.getDouble("remb_amount"),
+								rs.getInt("approval_id"),
+								rs.getDouble("reimbursment_amount"),
 								rs.getInt("fm_id"),
-								rs.getDate("time_stamp"),
+								rs.getDate("time_submitted"),
 								rs.getString("description"),
 								rs.getInt("type_id")));
 							
@@ -358,21 +387,24 @@ public class DaoImp {
 
 	public Collection<Reimbersment> viewReimbursementsByStatus(int approvedid) {
 		Collection <Reimbersment> rem = new ArrayList<>();
-		try(Connection connection = DriverManager.getConnection(url, username, password)){
-			
-			String sql = "select remb_id ,employee_id ,approved_id ,remb_amount,fm_id,time_stamp,description,type_id from reimbursment where approved_id=?";
+		//try(Connection connection = DriverManager.getConnection(url, username, password)){
+		try {
+			Connection connection = connectionFactory.getConnection();
+	
+			//String sql = "select remb_id ,employee_id ,approved_id ,remb_amount,fm_id,time_stamp,description,type_id from reimbursment where approved_id=?";
+			String sql = "select reimbursement_id,employee_id ,approval_id,reimbursment_amount,fm_id,time_submitted,description,type_id from reimbursement_table where approval_id =?";
 			PreparedStatement ps = connection.prepareStatement(sql);
 			ps.setInt(1, approvedid);
 			ResultSet rs = ps.executeQuery();
 			
 			int i = 0;
 			while(rs.next()) {
-						rem.add(new Reimbersment(rs.getInt("remb_id"),
+						rem.add(new Reimbersment(rs.getInt("reimbursement_id"),
 								rs.getInt("employee_id"),
-								rs.getInt("approved_id"),
-								rs.getDouble("remb_amount"),
+								rs.getInt("approval_id"),
+								rs.getDouble("reimbursment_amount"),
 								rs.getInt("fm_id"),
-								rs.getDate("time_stamp"),
+								rs.getDate("time_submitted"),
 								rs.getString("description"),
 								rs.getInt("type_id")));
 							
@@ -393,11 +425,13 @@ public class DaoImp {
 	public boolean ApproveorRejectReimbursements(int rid, int status,int empid) {
 		
 		boolean success = false;
-		try(Connection connection = DriverManager.getConnection(url, username, password)){
+		//try(Connection connection = DriverManager.getConnection(url, username, password)){
 		
-			
-			String sql = "update reimbursment set approved_id = ?,fm_id = ? where remb_id = ? ";
-				
+		try {
+			Connection connection = connectionFactory.getConnection();
+	
+			//String sql = "update reimbursment set approved_id = ?,fm_id = ? where remb_id = ? ";
+			String sql = "update reimbursement_table set approval_id = ?,fm_id = ? where reimbursement_id = ? ";	
 			PreparedStatement ps = connection.prepareStatement(sql);
 			
 			ps.setInt(1, status);

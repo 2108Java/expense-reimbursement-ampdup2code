@@ -4,6 +4,7 @@ import com.ers.dao.DaoImp;
 import com.ers.service.AuthenticationSer;
 import com.ers.service.RegistrationSer;
 import com.ers.service.ReimbursementSer;
+import com.ers.util.PropertiesParser;
 
 import Menu.Menu;
 
@@ -11,6 +12,8 @@ public class MainDriver {
 	
 	public static void main(String[] args) {
 
+		PropertiesParser.getProperties();
+		
 		
 		DaoImp database = new DaoImp();
 		

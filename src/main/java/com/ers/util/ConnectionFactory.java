@@ -4,13 +4,13 @@ package com.ers.util;
 	import java.sql.Connection;
 	import java.sql.DriverManager;
 	import java.sql.SQLException;
+	import com.ers.util.PropertiesParser;
 
 	public class ConnectionFactory {
 	
-		//private static final String URL = "jdbc:postgresql://" + "localhost" + "/ERS";
-		private static final String URL = "jdbc:postgresql://expense-reimbersment-project-1.crtqdgrkyvxb.us-east-2.rds.amazonaws.com/";
-		private static final String USERNAME = "postgres";
-		private static final String PASSWORD = "Password";
+		private final static String URL = PropertiesParser.dbDetails.get("url");
+		private final static String USERNAME = PropertiesParser.dbDetails.get("username");
+		private final static String PASSWORD = PropertiesParser.dbDetails.get("password");
 
 		public Connection getConnection() throws SQLException {
 

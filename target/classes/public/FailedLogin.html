@@ -16,14 +16,14 @@
   <h1 class="display-4" id="greeting">Welcome to the expenditure reimbursement system</h1>
 
   <div class="login-box">
-    <form id="login-form">
+    <form id="failedlogin-form" action = "/FailedLogin.html" method="POST" >
       <div class="mb-3">
         <label for="exampleInputEmail1" class="form-label">Employee email address</label>
-        <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
+        <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" name="username">
       </div>
       <div class="mb-3">
         <label for="exampleInputPassword1" class="form-label">Password</label>
-        <input type="password" class="form-control" id="exampleInputPassword1">
+        <input type="password" class="form-control" id="exampleInputPassword1" name="password">
       </div>
       <p id="login-fail">Login failed. Please try again.</p>
       <button type="submit" class="btn btn-primary">Submit</button>

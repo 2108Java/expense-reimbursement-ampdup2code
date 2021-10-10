@@ -1,9 +1,12 @@
 package com.ers.controller;
+import org.apache.log4j.Logger;
+
 import io.javalin.Javalin;
 import io.javalin.http.Context;
 
 public class RequestHandler {
 	
+	private static final Logger loggy = Logger.getLogger(RequestHandler.class);
 	
 	public static boolean checkAccess(Context ctx) {
 		if(ctx.sessionAttribute("access") != null //checking if session exists
@@ -26,15 +29,18 @@ public class RequestHandler {
 		app.post("/Login", ctx -> 
 		{
 			if(ctrl.authenticate(ctx)==1) {
+				loggy.info("User logged in as an employee.");
 				ctx.res.sendRedirect("/Menu");
 			}
 			//ctx.req.getRequestDispatcher("Menu.html").forward(ctx.req, ctx.res);
 			else if(ctrl.authenticate(ctx)==2) {
 				//System.out.println("dddddddddddddddddddddddd");
+				loggy.info("User logger in as a finance manager.");
 				ctx.res.sendRedirect("/FMenu");
 				//ctx.req.getRequestDispatcher("Menu.html").forward(ctx.req, ctx.res);	
 			
 			}else {
+				loggy.warn("User failed to login.");
 				ctx.res.sendRedirect("/FailedLogin");
 			}
 		
@@ -51,15 +57,18 @@ public class RequestHandler {
 		{
 				
 				if(ctrl.authenticate(ctx)==1) {
+					loggy.info("User logged in as an employee.");
 					ctx.res.sendRedirect("/Menu");
 				}
 				//ctx.req.getRequestDispatcher("Menu.html").forward(ctx.req, ctx.res);
 				else if(ctrl.authenticate(ctx)==2) {
 					//System.out.println("dddddddddddddddddddddddd");
+					loggy.info("User logger in as a finance manager.");
 					ctx.res.sendRedirect("/FMenu");
 					//ctx.req.getRequestDispatcher("Menu.html").forward(ctx.req, ctx.res);	
 				
 				}else {
+					loggy.warn("User failed to login.");
 					ctx.res.sendRedirect("/FailedLogin");
 				}
 		

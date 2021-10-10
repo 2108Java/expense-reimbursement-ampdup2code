@@ -6,6 +6,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
+
+import org.apache.log4j.Logger;
+
 import com.ers.model.Employee;
 import com.ers.model.Reimbersment;
 import com.ers.model.User;
@@ -19,7 +22,7 @@ public class DaoImp {
 //	private String username = "postgres";
 //	private String password = "Passw0rd$";
 //	private String url = "jdbc:postgresql://" + dbLocation + "/ERS";
-	
+	private static final Logger loggy = Logger.getLogger(DaoImp.class);
 
 	ConnectionFactory connectionFactory = new ConnectionFactory();
 	
@@ -33,10 +36,13 @@ public class DaoImp {
 			try {
 				Connection connection = connectionFactory.getConnection();
 		
+				loggy.info("Authenticating login information.");
 				//String sql = "SELECT * FROM users where username = ? and password = ?";
 				String sql = "SELECT * FROM user_table where username = ? and user_password = ?";
 					
 				PreparedStatement ps = connection.prepareStatement(sql);
+				
+				
 				
 				ps.setString(1, username1);
 				ps.setString(2, password1);	
@@ -174,7 +180,7 @@ public class DaoImp {
 	
 			//String sql = "select trans_id,db_account,cr_account,amount,reference,date_created,transaction_type_id from b_transaction";
 			//String sql = "select employee_id,fname,lname,user_id from employee";
-			
+			loggy.info("Displaying all employees");
 			String sql = "select employee_id,f_name,l_name,user_id from employee_table";
 			PreparedStatement ps = connection.prepareStatement(sql);
 			
@@ -209,7 +215,7 @@ public class DaoImp {
 		try {
 			Connection connection = connectionFactory.getConnection();
 	
-			
+			loggy.info("Finding a users ID number");
 			//String sql = "SELECT user_id,username,password,usertype FROM users where username = ? and password = ?";
 			String sql = "SELECT user_id,username,user_password,type_id FROM user_table where username = ? and user_password = ?";
 				
@@ -248,7 +254,7 @@ public class DaoImp {
 		 try {
 				Connection connection = connectionFactory.getConnection();
 		
-			
+			loggy.info("Finding an employee ID based on user ID.");
 			//String sql = "select employee_id,fname,lname,user_id from employee where user_id=?";
 			String sql = "select employee_id,f_name,l_name,user_id from employee_table where user_id=?";	
 			PreparedStatement ps = connection.prepareStatement(sql);
@@ -284,6 +290,7 @@ public class DaoImp {
     	try {
 			Connection connection = connectionFactory.getConnection();
 	
+			loggy.info("Adding a new reimbersment request to the database");
 			//String sql = "insert into reimbursment (employee_id,remb_amount,type_id,description,approved_id) values (?,?,?,?,?)";
 
 			String sql = "insert into reimbursement_table (employee_id,reimbursment_amount,type_id,description,approval_id) values (?,?,?,?,?)";
@@ -314,6 +321,7 @@ public class DaoImp {
 		try {
 			Connection connection = connectionFactory.getConnection();
 	
+			loggy.info("Displaying all of an employee's reimbersment requests.");
 			//String sql = "select remb_id ,employee_id ,approved_id ,remb_amount,fm_id,time_stamp,description,type_id from reimbursment where employee_id = ?";
 			String sql = "select reimbursement_id ,employee_id ,approval_id ,reimbursment_amount,fm_id,time_submitted,description,type_id from reimbursement_table where employee_id = ?";
 			PreparedStatement ps = connection.prepareStatement(sql);
@@ -355,6 +363,7 @@ public class DaoImp {
 		try {
 			Connection connection = connectionFactory.getConnection();
 	
+			loggy.info("Displaying all reimbersment requests");
 			//String sql = "select remb_id ,employee_id ,approved_id ,remb_amount,fm_id,time_stamp,description,type_id from reimbursment";
 			String sql = "select reimbursement_id ,employee_id ,approval_id ,reimbursment_amount,fm_id,time_submitted,description,type_id from reimbursement_table";
 			PreparedStatement ps = connection.prepareStatement(sql);
@@ -391,6 +400,7 @@ public class DaoImp {
 		try {
 			Connection connection = connectionFactory.getConnection();
 	
+			loggy.info("Displaying reimbersment requests based on approval status.");
 			//String sql = "select remb_id ,employee_id ,approved_id ,remb_amount,fm_id,time_stamp,description,type_id from reimbursment where approved_id=?";
 			String sql = "select reimbursement_id,employee_id ,approval_id,reimbursment_amount,fm_id,time_submitted,description,type_id from reimbursement_table where approval_id =?";
 			PreparedStatement ps = connection.prepareStatement(sql);
@@ -430,6 +440,7 @@ public class DaoImp {
 		try {
 			Connection connection = connectionFactory.getConnection();
 	
+			loggy.info("Updating the approval status of a reimbersment request");
 			//String sql = "update reimbursment set approved_id = ?,fm_id = ? where remb_id = ? ";
 			String sql = "update reimbursement_table set approval_id = ?,fm_id = ? where reimbursement_id = ? ";	
 			PreparedStatement ps = connection.prepareStatement(sql);

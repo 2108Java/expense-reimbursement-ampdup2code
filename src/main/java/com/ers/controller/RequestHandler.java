@@ -35,7 +35,7 @@ public class RequestHandler {
 			//ctx.req.getRequestDispatcher("Menu.html").forward(ctx.req, ctx.res);
 			else if(ctrl.authenticate(ctx)==2) {
 				//System.out.println("dddddddddddddddddddddddd");
-				loggy.info("User logger in as a finance manager.");
+				loggy.info("User logged in as a finance manager.");
 				ctx.res.sendRedirect("/FMenu");
 				//ctx.req.getRequestDispatcher("Menu.html").forward(ctx.req, ctx.res);	
 			
@@ -63,7 +63,7 @@ public class RequestHandler {
 				//ctx.req.getRequestDispatcher("Menu.html").forward(ctx.req, ctx.res);
 				else if(ctrl.authenticate(ctx)==2) {
 					//System.out.println("dddddddddddddddddddddddd");
-					loggy.info("User logger in as a finance manager.");
+					loggy.info("User logged in as a finance manager.");
 					ctx.res.sendRedirect("/FMenu");
 					//ctx.req.getRequestDispatcher("Menu.html").forward(ctx.req, ctx.res);	
 				

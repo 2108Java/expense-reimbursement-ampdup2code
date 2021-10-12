@@ -25,7 +25,7 @@
         <form action="/endpoint" method="post">
             <div class="form-group">
                 <label for="amount">Amount to be reimbursed</label>
-                <input type="number" class="form-control" id="amount" placeholder="100.00">
+                <input type="number" step="0.01" class="form-control" id="amount" placeholder="100.00">
             </div>
             <div class="form-group">
                 <label for="category">Category</label>
@@ -41,7 +41,10 @@
                 <textarea class="form-control" id="description" rows="3"></textarea>
             </div>
 
-            <button type="submit" class="btn btn-primary">Submit</button>
+            <div style="text-align: center;">
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </div>
+
         </form>
 
     </div>

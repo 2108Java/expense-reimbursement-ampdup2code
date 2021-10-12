@@ -6,3 +6,8 @@ function displayRowCount(tableId) {
 }
 
 document.getElementById("ticket-greeting").innerHTML = displayRowCount("e-reimbursement");
+
+function deleteRow(o) {
+    let p = o.parentNode.parentNode;
+    p.parentNode.removeChild(p);
+}
